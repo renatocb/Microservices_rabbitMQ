@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platforms-depl
+spec:
+  selector:
+    matchLabels:
+      app: platformservice      
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: platformservice        
+    spec:
+      containers:
+      - name: platformservice
+        image: "renatobento/platformservice:latest"
+        imagePullPolicy: Never        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: platforms-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: platformservice
+  ports:
+  - name: platformservice
+    protocol: TCP
+    port: 80        
+  - name: platformgrpc
+    protocol: TCP
+    port: 666  
+    targetPort: 666   
